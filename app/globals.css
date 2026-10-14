@@ -78,7 +78,24 @@ body {
 .buttonsec {
   @apply mx-auto  bg-blue-400 rounded-md p-2 text-white text-center hover:bg-gray-700;
 }
-
+ 
 .CopyR {
    @apply text-center; margin: 0; position: absolute; left: 50%; transform: translateX(-50%); white-space: nowrap;
 }
+/*
+Für rechtsbündig
+.CopyR {
+  @apply text-right; margin: 0;
+
+
+Für linksbündig
+.Footer {
+  @apply bg-gray-700 h-16 flex items-center justify-start px-6 text-white;
+  margin-top: 5vh;
+}
+
+.CopyR {
+  @apply text-left;
+  margin: 0;
+}*/
+
