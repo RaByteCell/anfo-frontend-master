@@ -59,12 +59,24 @@ body {
   @apply inline-flex size-12 rounded-full items-center ml-auto transition-colors hover:bg-blue-400; margin-right: 5vh;
 }
 
-.reload-icon {
-  @apply size-5;
+.reload-button {
+  @apply w-15 h-15
+}
+
+.reload-button:hover {
+  cursor: pointer;
 }
 
 .tablesec {
   @apply grid grid-cols-1 gap-y-6;
+}
+
+.tablesec form {
+  @apply grid grid-cols-1 gap-y-6;
+}
+
+.error {
+  @apply text-red-500 -mt-1 mb-1 text-center text-base;
 }
 
 .texttisec{
@@ -77,6 +89,10 @@ body {
 
 .buttonsec {
   @apply mx-auto  bg-blue-400 rounded-md p-2 text-white text-center hover:bg-gray-700;
+}
+
+.buttonsec:hover {
+  cursor: pointer;
 }
  
 .CopyR {
