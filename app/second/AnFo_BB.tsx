@@ -77,7 +77,7 @@ export const Second = () => {
     }
 
     setErrors({});
-    alert('Formular erfolgreich ausgefüllt!');
+    alert('Wurde erfolgreich abgesendet! :)');
   };
 
   return (
