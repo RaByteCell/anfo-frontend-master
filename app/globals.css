@@ -38,8 +38,7 @@ body {
   margin-top: 5vh;
 }
 
-.reload-button {
-  @apply ml-auto inline-flex size-15 items-center rounded-full transition-colors hover:bg-blue-400;
+.reloadbutton {
   margin-right: 5vh;
   cursor: pointer;
 }

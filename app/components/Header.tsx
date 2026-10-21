@@ -18,7 +18,7 @@ export const Header = () => {
       {/* Reload-Button rechts */}
       <button
         type="button"
-        className="w-15 h-15 inline-flex size-12 rounded-full items-center ml-auto transition-colors hover:bg-blue-400"
+        className="reloadbutton w-15 h-15 inline-flex size-12 rounded-full items-center ml-auto transition-colors hover:bg-blue-400"
         onClick={() => window.location.reload()}
         aria-label="Seite neu laden"
         title="Seite neu laden"
