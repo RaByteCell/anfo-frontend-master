@@ -18,8 +18,9 @@ const anfo_contact = z.object({
   bdate: z.coerce.date(),
 });
 
+// 2. Definition des Formularschemas
 export type FormSchema = z.infer<typeof anfo_contact>;
-
+// 3. Initialisierung des Formulars
 export default function Home() {
   const {
     register,
@@ -32,7 +33,7 @@ export default function Home() {
   >({
     resolver: zodResolver(anfo_contact),
   });
-
+  // 4. Initialisierung der Datenübermittlung
   const { mutate, isSuccess } = useCreateanfo_contact();
 
   const onSubmit = (data: FormSchema) => {
