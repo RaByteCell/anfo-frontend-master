@@ -17,7 +17,6 @@ const anfo_contact = z.object({
   email: z.email("Bitte gib eine gültige E-Mail ein").trim(),
   bdate: z.coerce.date(),
 });
-
 // 2. Definition des Formularschemas
 export type FormSchema = z.infer<typeof anfo_contact>;
 // 3. Initialisierung des Formulars
@@ -39,7 +38,6 @@ export default function Home() {
   const onSubmit = (data: FormSchema) => {
     mutate(data);
   };
-
   return (
     <main className="flex flex-1 justify-center">
       <div className="containersec mx-auto flex max-w-sm items-center bg-white px-6 py-8 ring shadow-xl ring-gray-900/5">
