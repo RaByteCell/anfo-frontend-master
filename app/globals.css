@@ -26,92 +26,38 @@ body {
 }
 
 .Footer {
-  @apply bg-gray-700 h-16 flex items-center justify-center text-white; margin-top: 5vh;
+  @apply flex h-16 items-center justify-between bg-gray-700 px-6;
+  margin-top: 5vh;
 }
 
-.Header { 
-  @apply bg-gray-700 h-16 flex items-center justify-between px-6;
-}
-
-.input {
-  @apply border border-blue-500 
-}
-
-
-/*CSS von Bugelnig - 09102026 - app/seconds/AnFo_BB*/
-.mainsec {
-  @apply flex flex-1 justify-center;
+.Header {
+  @apply flex h-16 items-center justify-between bg-gray-700 px-6;
 }
 
 .containersec {
-  @apply mx-auto flex max-w-sm items-center bg-white px-6 py-8 ring shadow-xl ring-gray-900/5; margin-top: 5vh;
-}
-
-.logo {
-  @apply flex items-center; margin-left: 5vh;
-}
-
-.logo img { 
-  @apply h-12 w-auto;
+  margin-top: 5vh;
 }
 
 .reload-button {
-  @apply inline-flex size-12 rounded-full items-center ml-auto transition-colors hover:bg-blue-400; margin-right: 5vh;
-}
-
-.reload-button {
-  @apply w-15 h-15
-}
-
-.reload-button:hover {
+  @apply ml-auto inline-flex size-15 items-center rounded-full transition-colors hover:bg-blue-400;
+  margin-right: 5vh;
   cursor: pointer;
-}
-
-.tablesec {
-  @apply grid grid-cols-1 gap-y-6;
-}
-
-.tablesec form {
-  @apply grid grid-cols-1 gap-y-6;
-}
-
-.error {
-  @apply text-red-500 -mt-1 mb-1 text-center text-base;
-}
-
-.texttisec{
-  @apply font-bold text-center text-3xl;
 }
 
 .inputfielsec {
   @apply border border-blue-400 rounded-md w-full text-center text-base;
 }
 
-.buttonsec {
-  @apply mx-auto  bg-blue-400 rounded-md p-2 text-white text-center hover:bg-gray-700;
-}
-
 .buttonsec:hover {
   cursor: pointer;
 }
- 
-.CopyR {
-   @apply text-center; margin: 0; position: absolute; left: 50%; transform: translateX(-50%); white-space: nowrap;
-}
-/*
-Für rechtsbündig
-.CopyR {
-  @apply text-right; margin: 0;
 
-
-Für linksbündig
-.Footer {
-  @apply bg-gray-700 h-16 flex items-center justify-start px-6 text-white;
-  margin-top: 5vh;
+.error {
+  @apply text-red-500 -mt-1 mb-1 text-center text-base dark:text-red-400;
 }
 
 .CopyR {
-  @apply text-left;
+  @apply absolute left-1/2 whitespace-nowrap text-center text-white;
   margin: 0;
-}*/
-
+  transform: translateX(-50%);
+}
