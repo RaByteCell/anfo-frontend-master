@@ -38,11 +38,6 @@ body {
   margin-top: 5vh;
 }
 
-.reloadbutton {
-  margin-right: 5vh;
-  cursor: pointer;
-}
-
 .inputfielsec {
   @apply border border-blue-400 rounded-md w-full text-center text-base;
 }

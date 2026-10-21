@@ -5,7 +5,7 @@ export const Header = () => {
   return (
     <header className="Header">
       {/* Bild links */}
-      <div className="h-12 w-auto">
+      <div className=" logo h-12 w-auto">
         <Image
           src="/logo-generic.svg"
           alt="Logo"
