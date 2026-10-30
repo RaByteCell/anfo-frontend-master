@@ -313,7 +313,7 @@ export default function Home() {
             </h2>
 
             <p className="mb-3 text-center text-gray-600">
-              Soll dere Kontakt wirklich gelöscht werden?
+              Soll der Kontakt wirklich gelöscht werden?
             </p>
 
             <p className="mb-6 text-center text-lg font-semibold">
