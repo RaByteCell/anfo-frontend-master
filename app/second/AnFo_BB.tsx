@@ -284,7 +284,7 @@ export default function Home() {
                 <button
                   type="submit"
                   disabled={isUpdating}
-                  className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
+                  className="rounded-md bg-blue-400 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
                 >
                   {isUpdating ? "Speichert..." : "Speichern"}
                 </button>
