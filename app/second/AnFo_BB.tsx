@@ -263,7 +263,7 @@ export default function Home() {
             </button>
 
             <h2 className="mb-6 text-center text-2xl font-bold">
-              Anmeldung bearbeiten
+              Kontakt bearbeiten
             </h2>
 
             <form
