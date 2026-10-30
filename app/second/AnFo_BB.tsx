@@ -185,7 +185,7 @@ export default function Home() {
         {!isLoading && !isError && (
           <table className="w-full border-collapse text-left">
             <thead>
-              <tr className="bg-gray-200">
+              <tr className="bg-gray-700 text-blue-50 text-center">
                 {[
                   "Vorname",
                   "Nachname",
@@ -193,9 +193,9 @@ export default function Home() {
                   "PLZ",
                   "E-Mail",
                   "Geburtsdatum",
-                  "Aktionen",
+                  "Verwalten",
                 ].map((heading) => (
-                  <th key={heading} className="border p-2">
+                  <th key={heading} className="contactview">
                     {heading}
                   </th>
                 ))}
@@ -205,19 +205,19 @@ export default function Home() {
             <tbody>
               {contacts?.map((contact) => (
                 <tr key={contact.id} className="hover:bg-gray-100">
-                  <td className="border p-2">{contact.vorname}</td>
-                  <td className="border p-2">{contact.nachname}</td>
-                  <td className="border p-2">{contact.adresse}</td>
-                  <td className="border p-2">{contact.plz}</td>
-                  <td className="border p-2">{contact.email}</td>
-                  <td className="border p-2">{contact.bdate}</td>
+                  <td className="contactview">{contact.vorname}</td>
+                  <td className="contactview">{contact.nachname}</td>
+                  <td className="contactview">{contact.adresse}</td>
+                  <td className="contactview">{contact.plz}</td>
+                  <td className="contactview">{contact.email}</td>
+                  <td className="contactview">{contact.bdate}</td>
 
-                  <td className="border p-2">
+                  <td className="contactview">
                     <div className="flex justify-center gap-3">
                       <button
                         type="button"
                         onClick={() => handleEdit(contact)}
-                        className="text-blue-600 hover:text-blue-800"
+                        className="text-blue-400 hover:text-blue-800"
                         title="Bearbeiten"
                       >
                         <Pencil size={18} />

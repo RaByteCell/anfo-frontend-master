@@ -55,3 +55,7 @@ body {
   margin: 0;
   transform: translateX(-50%);
 }
+
+.contactview {
+  @apply border p-2;
+}
