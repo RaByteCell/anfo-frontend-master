@@ -39,7 +39,7 @@ body {
 }
 
 .inputfielsec {
-  @apply border border-blue-400 rounded-md w-full text-center text-base;
+  @apply border border-blue-400 rounded-md w-full text-center h-12 text-base;
 }
 
 .buttonsec:hover {
@@ -53,9 +53,31 @@ body {
 .CopyR {
   @apply absolute left-1/2 whitespace-nowrap text-center text-white;
   margin: 0;
-  transform: translateX(-50%);
+  transform: translateX(-55%);
 }
 
 .contactview {
-  @apply border p-2;
+  @apply border p-2 text-center;
+}
+
+.date-input {
+  position: relative;
+  text-align: center;
+  padding: 0;
+}
+
+.date-input::-webkit-datetime-edit {
+  position: absolute;
+  left: 59%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.date-input::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: 10px;
+}
+
+.PopUp_ActionButton {
+  @apply flex justify-center gap-4;
 }

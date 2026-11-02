@@ -128,9 +128,9 @@ export default function Home() {
     fieldErrors: typeof errors | typeof editErrors,
   ) =>
     fields.map(({ name, placeholder, type }) => (
-      <div key={name}>
+      <div key={name} className="relative">
         <input
-          className="inputfielsec"
+          className={`inputfielsec ${type === "date" ? "date-input" : ""}`}
           type={type || "text"}
           placeholder={placeholder}
           {...registerField(name)}
@@ -252,7 +252,7 @@ export default function Home() {
       {/* BEARBEITUNGS-POPUP */}
       {selectedContact && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="relative w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
+          <div className="relative mx-auto max-w-sm min-h-[650px] rounded-lg bg-white px-5 pt-13 shadow-xl">
             <button
               type="button"
               onClick={() => setSelectedContact(null)}
@@ -268,11 +268,11 @@ export default function Home() {
 
             <form
               onSubmit={handleSubmitEdit(onUpdate)}
-              className="grid grid-cols-1 gap-4"
+              className="grid grid-cols-1 gap-6 px-5"
             >
               {renderFields(registerEdit, editErrors)}
 
-              <div className="mt-4 flex justify-end gap-3">
+              <div className="PopUp_ActionButton">
                 <button
                   type="button"
                   onClick={() => setSelectedContact(null)}
@@ -320,7 +320,7 @@ export default function Home() {
               {deleteContactData.vorname} {deleteContactData.nachname}
             </p>
 
-            <div className="flex justify-center gap-4">
+            <div className="PopUp_ActionButton">
               <button
                 type="button"
                 disabled={isDeleting}

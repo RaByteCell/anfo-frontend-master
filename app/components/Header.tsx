@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import { RotateCw } from "lucide-react";
 
 export const Header = () => {
   return (
@@ -18,19 +19,12 @@ export const Header = () => {
       {/* Reload-Button rechts */}
       <button
         type="button"
-        className="reloadbutton w-15 h-15 inline-flex size-12 rounded-full items-center ml-auto transition-colors hover:bg-blue-400"
+        className="rounded-full size-13 text-white hover:text-blue-400 hover:border hover:border-blue-400 transition-colors inline-flex ml-auto items-center justify-center"
         onClick={() => window.location.reload()}
         aria-label="Seite neu laden"
         title="Seite neu laden"
       >
-        <svg
-          fill="#ffffff"
-          viewBox="0 0 512 512"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <title>Reload</title>
-          <path d="M256,48C141.31,48,48,141.31,48,256s93.31,208,208,208,208-93.31,208-208S370.69,48,256,48ZM376,238.77H287l36.88-36.88-5.6-6.51a87.38,87.38,0,1,0-62.94,148,87.55,87.55,0,0,0,82.42-58.25L343.13,270l30.17,10.67L368,295.8A119.4,119.4,0,1,1,255.38,136.62a118.34,118.34,0,0,1,86.36,36.95l.56.62,4.31,5L376,149.81Z" />
-        </svg>
+        <RotateCw size={34} />
       </button>
     </header>
   );
