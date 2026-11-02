@@ -53,7 +53,7 @@ body {
 .CopyR {
   @apply absolute left-1/2 whitespace-nowrap text-center text-white;
   margin: 0;
-  transform: translateX(-55%);
+  transform: translateX(-50%);
 }
 
 .contactview {
@@ -80,4 +80,8 @@ body {
 
 .PopUp_ActionButton {
   @apply flex justify-center gap-4;
+}
+
+.PopUp_Container {
+  @apply fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4;
 }

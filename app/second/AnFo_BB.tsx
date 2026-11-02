@@ -251,7 +251,7 @@ export default function Home() {
 
       {/* BEARBEITUNGS-POPUP */}
       {selectedContact && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+        <div className="PopUp_Container">
           <div className="relative mx-auto max-w-sm min-h-[650px] rounded-lg bg-white px-5 pt-13 shadow-xl">
             <button
               type="button"
@@ -296,7 +296,7 @@ export default function Home() {
 
       {/* LÖSCHEN-POPUP */}
       {deleteContactData && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+        <div className="PopUp_Container">
           <div className="relative w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
             <button
               type="button"
