@@ -10,7 +10,7 @@ import {
   contactSchema,
   type Contact,
   type ContactInput,
-} from "@/lib/contactZODSchema";
+} from "@/lib/contact-zod-schema";
 // Import components
 import ContactTable from "./contacttable";
 import DeletePopup from "./pop-up/delete";
@@ -22,7 +22,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 // Page
-export default function Home() {
+export default function ContactForm() {
   // Hooks
   const { data: contacts, isLoading, isError } = useContacts();
   const { mutate, isSuccess } = useCreateContact();

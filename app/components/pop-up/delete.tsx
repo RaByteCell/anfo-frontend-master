@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import type { Contact } from "@/lib/contactZODSchema";
+import type { Contact } from "@/lib/contact-zod-schema";
 
 type DeletePopupProps = {
   contact: Contact;

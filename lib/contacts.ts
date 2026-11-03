@@ -1,7 +1,7 @@
 // Import node_modules
 import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { Contact, ContactInput } from "./contactZODSchema";
+import type { Contact, ContactInput } from "./contact-zod-schema";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:1337/api",

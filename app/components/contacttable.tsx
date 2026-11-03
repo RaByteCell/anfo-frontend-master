@@ -1,6 +1,6 @@
 import { Pencil, Trash2 } from "lucide-react";
-import { formatDate } from "@/lib/formatDate";
-import type { Contact } from "@/lib/contactZODSchema";
+import { formatDate } from "@/lib/format-date";
+import type { Contact } from "@/lib/contact-zod-schema";
 
 type ContactTableProps = {
   contacts: Contact[];

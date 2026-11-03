@@ -1,5 +1,5 @@
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
-import type { ContactInput } from "@/lib/contactZODSchema";
+import type { ContactInput } from "@/lib/contact-zod-schema";
 
 const fields: {
   name: keyof ContactInput;

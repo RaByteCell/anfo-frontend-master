@@ -8,7 +8,7 @@ import {
   contactSchema,
   type Contact,
   type ContactInput,
-} from "@/lib/contactZODSchema";
+} from "@/lib/contact-zod-schema";
 
 type EditPopupProps = {
   contact: Contact;
