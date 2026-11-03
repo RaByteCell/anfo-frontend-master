@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { X } from "lucide-react";
 
-import { useRegister } from "../hooks/auth_Hooks/useRegister";
+import { useRegister } from "../../hooks/auth_hooks/useRegister";
 
 type RegisterPopupProps = {
   onClose: () => void;

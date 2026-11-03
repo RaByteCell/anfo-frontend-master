@@ -6,12 +6,12 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import { Pencil, Trash2, X } from "lucide-react";
 import { formatDate } from "@/lib/formatDate";
-import { useCreateanfo_contact } from "./hooks/data_trans/usepost_anfo_contact";
-import { useGetanfo_contact } from "./hooks/data_trans/useget_anfo_contact";
-import { useDeleteanfo_contact } from "./hooks/data_trans/useDelete_anfo_contact";
-import { useUpdateanfo_contact } from "./hooks/data_trans/useUpdate_anfo_contact";
+import { useCreateanfo_contact } from "../../hooks/data_trans/usepost_anfo_contact";
+import { useGetanfo_contact } from "../../hooks/data_trans/useget_anfo_contact";
+import { useDeleteanfo_contact } from "../../hooks/data_trans/useDelete_anfo_contact";
+import { useUpdateanfo_contact } from "../../hooks/data_trans/useUpdate_anfo_contact";
 
-import type { anfo_contact as AnfoContact } from "./hooks/data_trans/useget_anfo_contact";
+import type { anfo_contact as AnfoContact } from "../../hooks/data_trans/useget_anfo_contact";
 
 // 1. ZOD-SCHEMA
 const anfo_contact = z.object({

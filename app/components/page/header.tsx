@@ -4,10 +4,10 @@ import Image from "next/image";
 import { RotateCw, User, LogOut } from "lucide-react";
 import { useState } from "react";
 
-import LoginPopup from "../second/PopUp/LoginPopup";
-import RegisterPopup from "../second/PopUp/RegisterPopup";
-import { useGetUser } from "../second/hooks/auth_Hooks/useGetUser";
-import { useLogout } from "../second/hooks/auth_Hooks/useLogout";
+import LoginPopup from "../pop-up/LoginPopup";
+import RegisterPopup from "../pop-up/RegisterPopup";
+import { useGetUser } from "../../hooks/auth_hooks/useGetUser";
+import { useLogout } from "../../hooks/auth_hooks/useLogout";
 
 export const Header = () => {
   const [showLogin, setShowLogin] = useState(false);
