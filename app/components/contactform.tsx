@@ -1,37 +1,26 @@
 "use client";
-
+// Import lib
+import { formatDate } from "@/lib/formatDate";
+import {
+  useContacts,
+  useCreateContact,
+  useUpdateContact,
+  useDeleteContact,
+} from "@/lib/contacts";
+import {
+  contactSchema,
+  type Contact,
+  type ContactInput,
+} from "@/lib/contactZODSchema";
+// Import node_modules
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import z from "zod";
 import { Pencil, Trash2, X } from "lucide-react";
-import { formatDate } from "@/lib/formatDate";
-import { useCreateanfo_contact } from "../../hooks/data_trans/usepost_anfo_contact";
-import { useGetanfo_contact } from "../../hooks/data_trans/useget_anfo_contact";
-import { useDeleteanfo_contact } from "../../hooks/data_trans/useDelete_anfo_contact";
-import { useUpdateanfo_contact } from "../../hooks/data_trans/useUpdate_anfo_contact";
 
-import type { anfo_contact as AnfoContact } from "../../hooks/data_trans/useget_anfo_contact";
-
-// 1. ZOD-SCHEMA
-const anfo_contact = z.object({
-  vorname: z.string().trim().min(1, "Vorname ist erforderlich"),
-  nachname: z.string().trim().min(1, "Nachname ist erforderlich"),
-  adresse: z.string().trim().min(1, "Adresse ist erforderlich"),
-  plz: z
-    .string()
-    .trim()
-    .min(1, "PLZ ist erforderlich")
-    .regex(/^[0-9]+$/, "PLZ darf nur Ziffern enthalten"),
-  email: z.email("Bitte gib eine gültige E-Mail ein").trim(),
-  bdate: z.coerce.date(),
-});
-
-export type FormSchema = z.infer<typeof anfo_contact>;
-
-// 2. FORMULARFELDER
+// Form Inputfields
 const fields: {
-  name: keyof FormSchema;
+  name: keyof ContactInput;
   placeholder: string;
   type?: string;
 }[] = [
@@ -43,51 +32,41 @@ const fields: {
   { name: "bdate", placeholder: "", type: "date" },
 ];
 
-// 3. PAGE
+// Page
 export default function Home() {
-  // STRAPI-HOOKS
-  const { data: contacts, isLoading, isError } = useGetanfo_contact();
-  const { mutate, isSuccess } = useCreateanfo_contact();
+  // Hooks
+  const { data: contacts, isLoading, isError } = useContacts();
+  const { mutate, isSuccess } = useCreateContact();
+  const { mutate: deleteContact, isPending: isDeleting } = useDeleteContact();
+  const { mutate: updateContact, isPending: isUpdating } = useUpdateContact();
 
-  const { mutate: deleteContact, isPending: isDeleting } =
-    useDeleteanfo_contact();
-
-  const { mutate: updateContact, isPending: isUpdating } =
-    useUpdateanfo_contact();
-
-  // POPUP-STATES
-  const [selectedContact, setSelectedContact] = useState<AnfoContact | null>(
+  // Pop-Ups
+  const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+  const [deleteContactData, setDeleteContactData] = useState<Contact | null>(
     null,
   );
 
-  const [deleteContactData, setDeleteContactData] =
-    useState<AnfoContact | null>(null);
-
-  // FORMULARE
+  // Forms
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<z.input<typeof anfo_contact>, unknown, FormSchema>({
-    resolver: zodResolver(anfo_contact),
-  });
-
+  } = useForm<ContactInput>({ resolver: zodResolver(contactSchema) });
   const {
     register: registerEdit,
     handleSubmit: handleSubmitEdit,
     reset: resetEdit,
     formState: { errors: editErrors },
-  } = useForm<z.input<typeof anfo_contact>, unknown, FormSchema>({
-    resolver: zodResolver(anfo_contact),
+  } = useForm<ContactInput>({
+    resolver: zodResolver(contactSchema),
   });
 
-  // POST
-  const onSubmit = (data: FormSchema) => mutate(data);
+  // Post
+  const onSubmit = (data: ContactInput) => mutate(data);
 
-  // EDIT
-  const handleEdit = (contact: AnfoContact) => {
+  // Edit
+  const handleEdit = (contact: Contact) => {
     setSelectedContact(contact);
-
     resetEdit({
       vorname: contact.vorname,
       nachname: contact.nachname,
@@ -97,32 +76,24 @@ export default function Home() {
       bdate: contact.bdate.slice(0, 10),
     });
   };
-
-  const onUpdate = (data: FormSchema) => {
+  const onUpdate = (data: ContactInput) => {
     if (!selectedContact) return;
 
     updateContact(
-      {
-        documentId: selectedContact.documentId,
-        data: {
-          ...data,
-          bdate: data.bdate.toISOString().slice(0, 10),
-        },
-      },
+      { documentId: selectedContact.documentId, data },
       { onSuccess: () => setSelectedContact(null) },
     );
   };
 
-  // DELETE
+  // Delete
   const onDelete = () => {
     if (!deleteContactData) return;
-
     deleteContact(deleteContactData.documentId, {
       onSuccess: () => setDeleteContactData(null),
     });
   };
 
-  // FORMULARFELDER RENDERN
+  // Render Fields
   const renderFields = (
     registerField: typeof register | typeof registerEdit,
     fieldErrors: typeof errors | typeof editErrors,

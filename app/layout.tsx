@@ -1,7 +1,7 @@
 "use client";
 import "./globals.css";
-import { Header } from "./components/page/header";
-import { Footer } from "./components/page/footer";
+import { Header } from "./components/header";
+import { Footer } from "./components/footer";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 

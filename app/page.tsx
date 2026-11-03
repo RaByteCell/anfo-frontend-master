@@ -1,10 +1,10 @@
 "use client";
-import Second from "./components/page/contactform";
+import ContactForm from "./components/contactform";
 
 export default function Home() {
   return (
     <div>
-      <Second />
+      <ContactForm />
     </div>
   );
 }

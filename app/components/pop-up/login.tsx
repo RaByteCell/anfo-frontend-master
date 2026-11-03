@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { X } from "lucide-react";
 
-import { useLogin } from "../../hooks/auth_hooks/useLogin";
+import { useLogin } from "../../hooks/authentication/useLogin";
 
 const loginSchema = z.object({
   identifier: z.string().trim().email("Ungültige E-Mail-Adresse"),
