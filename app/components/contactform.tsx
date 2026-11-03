@@ -15,11 +15,11 @@ import {
 import ContactTable from "./contacttable";
 import DeletePopup from "./pop-up/delete";
 import FormFields from "./formfields";
+import EditPopup from "./pop-up/edit";
 // Import node_modules
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { X } from "lucide-react";
 
 // Page
 export default function Home() {
@@ -41,30 +41,11 @@ export default function Home() {
     handleSubmit,
     formState: { errors },
   } = useForm<ContactInput>({ resolver: zodResolver(contactSchema) });
-  const {
-    register: registerEdit,
-    handleSubmit: handleSubmitEdit,
-    reset: resetEdit,
-    formState: { errors: editErrors },
-  } = useForm<ContactInput>({
-    resolver: zodResolver(contactSchema),
-  });
 
   // Post
   const onSubmit = (data: ContactInput) => mutate(data);
 
   // Edit
-  const handleEdit = (contact: Contact) => {
-    setSelectedContact(contact);
-    resetEdit({
-      vorname: contact.vorname,
-      nachname: contact.nachname,
-      adresse: contact.adresse,
-      plz: contact.plz,
-      email: contact.email,
-      bdate: contact.bdate.slice(0, 10),
-    });
-  };
   const onUpdate = (data: ContactInput) => {
     if (!selectedContact) return;
 
@@ -117,58 +98,23 @@ export default function Home() {
           <ContactTable
             contacts={contacts ?? []}
             isDeleting={isDeleting}
-            onEdit={handleEdit}
+            onEdit={setSelectedContact}
             onDelete={setDeleteContactData}
           />
         )}
       </div>
 
-      {/* BEARBEITUNGS-POPUP */}
+      {/* EDIT-POPUP - Ausgewählter Eintrag wird im bearbeitungs-Modus angezeigt */}
       {selectedContact && (
-        <div className="PopUp_Container">
-          <div className="relative mx-auto max-w-sm min-h-[650px] rounded-lg bg-white px-5 pt-13 shadow-xl">
-            <button
-              type="button"
-              onClick={() => setSelectedContact(null)}
-              className="xButton"
-              title="Schließen"
-            >
-              <X size={22} />
-            </button>
-
-            <h2 className="mb-6 text-center text-2xl font-bold">
-              Kontakt bearbeiten
-            </h2>
-
-            <form
-              onSubmit={handleSubmitEdit(onUpdate)}
-              className="grid grid-cols-1 gap-6 px-5"
-            >
-              <FormFields register={registerEdit} errors={editErrors} />
-
-              <div className="PopUp_ActionButton">
-                <button
-                  type="button"
-                  onClick={() => setSelectedContact(null)}
-                  className="rounded-md bg-gray-300 px-4 py-2 hover:bg-gray-400"
-                >
-                  Abbrechen
-                </button>
-
-                <button
-                  type="submit"
-                  disabled={isUpdating}
-                  className="rounded-md bg-blue-400 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
-                >
-                  {isUpdating ? "Speichert..." : "Speichern"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+        <EditPopup
+          contact={selectedContact}
+          isUpdating={isUpdating}
+          onSave={onUpdate}
+          onClose={() => setSelectedContact(null)}
+        />
       )}
 
-      {/* DELETE-POPUP - Eintrag wird aus Strapi/Anfo_Contact gelöscht */}
+      {/* DELETE-POPUP - Ausgewählter Eintrag wird aus Strapi/Anfo_Contact gelöscht */}
       {deleteContactData && (
         <DeletePopup
           contact={deleteContactData}
