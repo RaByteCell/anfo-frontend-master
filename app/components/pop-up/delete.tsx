@@ -1,13 +1,15 @@
+// Importiert das X-Symbol zum Schließen des Pop-ups.
 import { X } from "lucide-react";
+// Importiert die Datenstruktur eines gespeicherten Kontakts.
 import type { Contact } from "@/lib/contact-zod-schema";
-
+// Legt fest, welche Informationen und Funktionen das Löschfenster benötigt.
 type DeletePopupProps = {
   contact: Contact;
   isDeleting: boolean;
   onConfirm: () => void;
   onClose: () => void;
 };
-
+// LÖSCH-POP-UP: Zeigt eine Sicherheitsabfrage an, bevor ein Kontakt gelöscht wird.
 export default function DeletePopup({
   contact,
   isDeleting,
@@ -15,8 +17,11 @@ export default function DeletePopup({
   onClose,
 }: DeletePopupProps) {
   return (
+    // Dunkler Hintergrund, der über die gesamte Website gelegt wird.
     <div className="PopUp_Container">
+      {/* FENSTERINHALT: Zeigt die Löschabfrage und die verfügbaren Aktionen an. */}
       <div className="relative w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
+        {/* Schließt das Pop-up, ohne den Kontakt zu löschen. */}
         <button
           type="button"
           disabled={isDeleting}
@@ -26,20 +31,21 @@ export default function DeletePopup({
         >
           <X size={22} />
         </button>
-
+        {/* Überschrift der Sicherheitsabfrage. */}
         <h2 className="mb-4 text-center text-2xl font-bold">
           Eintrag löschen?
         </h2>
-
+        {/* Fragt den Benutzer, ob der ausgewählte Kontakt wirklich gelöscht werden soll. */}
         <p className="mb-3 text-center text-gray-600">
           Soll der Kontakt wirklich gelöscht werden?
         </p>
-
+        {/* Zeigt den Vor- und Nachnamen des Kontakts an, der gelöscht werden soll. */}
         <p className="mb-6 text-center text-lg font-semibold">
           {contact.vorname} {contact.nachname}
         </p>
-
+        {/* AKTIONEN: Bietet die Möglichkeit, den Vorgang abzubrechen oder zu bestätigen. */}
         <div className="PopUp_ActionButton">
+          {/* Bricht den Löschvorgang ab und schließt das Fenster. */}
           <button
             type="button"
             disabled={isDeleting}
@@ -48,7 +54,7 @@ export default function DeletePopup({
           >
             Abbrechen
           </button>
-
+          {/* Bestätigt das Löschen und zeigt währenddessen einen Ladehinweis an. */}
           <button
             type="button"
             disabled={isDeleting}

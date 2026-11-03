@@ -6,8 +6,8 @@ import { useState } from "react";
 
 import LoginPopup from "./pop-up/login";
 import RegisterPopup from "./pop-up/register";
-import { useGetUser } from "../hooks/authentication/useGetUser";
-import { useLogout } from "../hooks/authentication/useLogout";
+import { useGetUser } from "../hooks/auth/useGetUser";
+import { useLogout } from "../hooks/auth/useLogout";
 
 export const Header = () => {
   const [showLogin, setShowLogin] = useState(false);

@@ -1,21 +1,25 @@
-// Import node_modules
+// Importiert Axios für die Kommunikation mit der Strapi-Schnittstelle (API).
 import axios from "axios";
+// Importiert React Query für das Laden, Speichern und Aktualisieren von Daten.
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+// Importiert die Datentypen für neue und bereits gespeicherte Kontakte.
 import type { Contact, ContactInput } from "./contact-zod-schema";
-
+// API-VERBINDUNG: Legt fest, unter welcher Adresse Strapi erreichbar ist.
+// Falls keine eigene Adresse hinterlegt ist, wird die lokale Standardadresse verwendet.
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:1337/api",
 });
-
+// DATENKENNUNG: Dient dazu, die gespeicherten Kontakte in React Query eindeutig zuzuordnen.
 const KEY = ["anfo_contacts"];
-
+// KONTAKTE LADEN: Ruft alle gespeicherten Kontakte aus Strapi ab.
 export const useContacts = () =>
   useQuery({
     queryKey: KEY,
     queryFn: async () =>
       (await api.get<{ data: Contact[] }>("/anfo-contacts")).data.data,
   });
-// Shared Block: führt eine Aktion aus und lädt danach die Liste neu
+// GEMEINSAME FUNKTION: Führt eine Datenänderung aus und aktualisiert anschließend die Kontaktliste.
+// Dadurch werden neue, bearbeitete oder gelöschte Einträge automatisch in der Tabelle angezeigt.
 function useContactMutation<V>(action: (vars: V) => Promise<unknown>) {
   const queryClient = useQueryClient();
   return useMutation({
@@ -23,18 +27,18 @@ function useContactMutation<V>(action: (vars: V) => Promise<unknown>) {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: KEY }),
   });
 }
-// Create Block: Erstellt einen neuen Eintrag in Strapi/Anfo_Contact
+// KONTAKT ERSTELLEN: Übermittelt einen neuen Kontakt an Strapi und speichert ihn dort.
 export const useCreateContact = () =>
   useContactMutation((data: ContactInput) =>
     api.post("/anfo-contacts", { data }),
   );
-// Edit Block: Überschreibreibt einen bestehenden Eintrag mit neuen Daten
+// KONTAKT BEARBEITEN: Aktualisiert einen bestehenden Kontakt anhand seiner Dokument-ID.
 export const useUpdateContact = () =>
   useContactMutation(
     ({ documentId, data }: { documentId: string; data: ContactInput }) =>
       api.put(`/anfo-contacts/${documentId}`, { data }),
   );
-// Delete Block: Entfernt einen Eintrag in Strapi/Anfo_Contact
+// KONTAKT LÖSCHEN: Entfernt einen bestehenden Kontakt anhand seiner Dokument-ID aus Strapi.
 export const useDeleteContact = () =>
   useContactMutation((documentId: string) =>
     api.delete(`/anfo-contacts/${documentId}`),

@@ -1,6 +1,7 @@
+// Importiert die benötigten Funktionen und Datentypen zur Verwaltung und Überprüfung der Formulareingaben.
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import type { ContactInput } from "@/lib/contact-zod-schema";
-
+// Legt fest, welche Eingabefelder im Anmeldeformular angezeigt werden.
 const fields: {
   name: keyof ContactInput;
   placeholder: string;
@@ -13,23 +14,28 @@ const fields: {
   { name: "email", placeholder: "E-Mail" },
   { name: "bdate", placeholder: "", type: "date" },
 ];
-
+// Legt fest, welche Formulardaten und Fehlermeldungen die Komponente erhält.
 type FormFieldsProps = {
   register: UseFormRegister<ContactInput>;
   errors: FieldErrors<ContactInput>;
 };
-
+// Erstellt die Eingabefelder und zeigt bei Bedarf passende Fehlermeldungen an.
 export default function FormFields({ register, errors }: FormFieldsProps) {
   return (
     <>
+      {/* Erstellt für jedes Feld aus der Liste automatisch ein eigenes Eingabefeld. */}
       {fields.map(({ name, placeholder, type }) => (
         <div key={name} className="relative">
           <input
+            // Verwendet für alle Felder ein einheitliches Design und passt Datumsfelder gesondert an.
             className={`inputfielsec ${type === "date" ? "date-input" : ""}`}
+            // Legt fest, ob ein normales Textfeld oder ein Datumsfeld angezeigt wird.
             type={type || "text"}
             placeholder={placeholder}
+            // Verbindet das Eingabefeld mit der Formularverwaltung und Datenüberprüfung.
             {...register(name)}
           />
+          {/* Zeigt eine Fehlermeldung an, wenn die eingegebenen Daten nicht gültig sind. */}
           {errors[name] && <p className="error">{errors[name]?.message}</p>}
         </div>
       ))}
