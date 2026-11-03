@@ -14,25 +14,12 @@ import {
 // Import components
 import ContactTable from "./contacttable";
 import DeletePopup from "./pop-up/delete";
+import FormFields from "./formfields";
 // Import node_modules
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { X } from "lucide-react";
-
-// Form Inputfields
-const fields: {
-  name: keyof ContactInput;
-  placeholder: string;
-  type?: string;
-}[] = [
-  { name: "vorname", placeholder: "Vorname" },
-  { name: "nachname", placeholder: "Nachname" },
-  { name: "adresse", placeholder: "Adresse" },
-  { name: "plz", placeholder: "PLZ" },
-  { name: "email", placeholder: "E-Mail" },
-  { name: "bdate", placeholder: "", type: "date" },
-];
 
 // Page
 export default function Home() {
@@ -94,26 +81,6 @@ export default function Home() {
       onSuccess: () => setDeleteContactData(null),
     });
   };
-
-  // Render Fields
-  const renderFields = (
-    registerField: typeof register | typeof registerEdit,
-    fieldErrors: typeof errors | typeof editErrors,
-  ) =>
-    fields.map(({ name, placeholder, type }) => (
-      <div key={name} className="relative">
-        <input
-          className={`inputfielsec ${type === "date" ? "date-input" : ""}`}
-          type={type || "text"}
-          placeholder={placeholder}
-          {...registerField(name)}
-        />
-        {fieldErrors[name] && (
-          <p className="error">{fieldErrors[name]?.message}</p>
-        )}
-      </div>
-    ));
-
   return (
     <main className="flex flex-1 flex-col items-center gap-8">
       {/* ANMELDEFORMULAR */}
@@ -124,7 +91,7 @@ export default function Home() {
         >
           <h1 className="text-center text-3xl font-bold">Anmeldeformular</h1>
 
-          {renderFields(register, errors)}
+          <FormFields register={register} errors={errors} />
 
           <button
             type="submit"
@@ -177,7 +144,7 @@ export default function Home() {
               onSubmit={handleSubmitEdit(onUpdate)}
               className="grid grid-cols-1 gap-6 px-5"
             >
-              {renderFields(registerEdit, editErrors)}
+              <FormFields register={registerEdit} errors={editErrors} />
 
               <div className="PopUp_ActionButton">
                 <button
