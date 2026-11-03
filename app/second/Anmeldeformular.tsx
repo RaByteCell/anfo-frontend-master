@@ -5,13 +5,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { Pencil, Trash2, X } from "lucide-react";
+import { formatDate } from "@/lib/formatDate";
+import { useCreateanfo_contact } from "./hooks/data_trans/usepost_anfo_contact";
+import { useGetanfo_contact } from "./hooks/data_trans/useget_anfo_contact";
+import { useDeleteanfo_contact } from "./hooks/data_trans/useDelete_anfo_contact";
+import { useUpdateanfo_contact } from "./hooks/data_trans/useUpdate_anfo_contact";
 
-import { useCreateanfo_contact } from "./hooks/usepost_anfo_contact";
-import { useGetanfo_contact } from "./hooks/useget_anfo_contact";
-import { useDeleteanfo_contact } from "./hooks/useDelete_anfo_contact";
-import { useUpdateanfo_contact } from "./hooks/useUpdate_anfo_contact";
-
-import type { anfo_contact as AnfoContact } from "./hooks/useget_anfo_contact";
+import type { anfo_contact as AnfoContact } from "./hooks/data_trans/useget_anfo_contact";
 
 // 1. ZOD-SCHEMA
 const anfo_contact = z.object({
@@ -210,7 +210,7 @@ export default function Home() {
                   <td className="contactview">{contact.adresse}</td>
                   <td className="contactview">{contact.plz}</td>
                   <td className="contactview">{contact.email}</td>
-                  <td className="contactview">{contact.bdate}</td>
+                  <td className="contactview">{formatDate(contact.bdate)}</td>
 
                   <td className="contactview">
                     <div className="flex justify-center gap-3">
@@ -256,7 +256,7 @@ export default function Home() {
             <button
               type="button"
               onClick={() => setSelectedContact(null)}
-              className="absolute right-4 top-4 text-gray-500 hover:text-black"
+              className="xButton"
               title="Schließen"
             >
               <X size={22} />
@@ -302,7 +302,7 @@ export default function Home() {
               type="button"
               disabled={isDeleting}
               onClick={() => setDeleteContactData(null)}
-              className="absolute right-4 top-4 text-gray-500 hover:text-black"
+              className="xButton"
               title="Schließen"
             >
               <X size={22} />

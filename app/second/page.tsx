@@ -1,5 +1,5 @@
 "use client";
-import Second from "./AnFo_BB";
+import Second from "./Anmeldeformular";
 
 export default function Home() {
   return (
