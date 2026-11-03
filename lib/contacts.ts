@@ -1,3 +1,4 @@
+// Import node_modules
 import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { Contact, ContactInput } from "./contactZODSchema";
@@ -14,8 +15,7 @@ export const useContacts = () =>
     queryFn: async () =>
       (await api.get<{ data: Contact[] }>("/anfo-contacts")).data.data,
   });
-
-// Gemeinsamer Baustein: führt eine Aktion aus und lädt danach die Liste neu
+// Shared Block: führt eine Aktion aus und lädt danach die Liste neu
 function useContactMutation<V>(action: (vars: V) => Promise<unknown>) {
   const queryClient = useQueryClient();
   return useMutation({
@@ -23,18 +23,18 @@ function useContactMutation<V>(action: (vars: V) => Promise<unknown>) {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: KEY }),
   });
 }
-
+// Create Block: Erstellt einen neuen Eintrag in Strapi/Anfo_Contact
 export const useCreateContact = () =>
   useContactMutation((data: ContactInput) =>
     api.post("/anfo-contacts", { data }),
   );
-
+// Edit Block: Überschreibreibt einen bestehenden Eintrag mit neuen Daten
 export const useUpdateContact = () =>
   useContactMutation(
     ({ documentId, data }: { documentId: string; data: ContactInput }) =>
       api.put(`/anfo-contacts/${documentId}`, { data }),
   );
-
+// Delete Block: Entfernt einen Eintrag in Strapi/Anfo_Contact
 export const useDeleteContact = () =>
   useContactMutation((documentId: string) =>
     api.delete(`/anfo-contacts/${documentId}`),
