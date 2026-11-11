@@ -1,27 +1,32 @@
+// Werkzeuge für die Serverroute: Anfrage lesen und Antwort senden.
 import { NextRequest, NextResponse } from "next/server";
 
+// Adresse von Strapi, falls keine eigene eingestellt ist: localhost.
 const STRAPI_URL = process.env.STRAPI_URL || "http://localhost:1337";
 
+// Meldet den Benutzer bei Strapi an und speichert die Tokens als Cookies.
 export async function POST(request: NextRequest) {
   try {
+    // E-Mail und Passwort aus dem Formular auslesen.
     const { identifier, password } = await request.json();
 
-    // LOGIN BEI STRAPI
+    // Zugangsdaten von Strapi prüfen lassen.
     const response = await fetch(`${STRAPI_URL}/api/auth/local`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json", // Die Daten werden als JSON geschickt.
       },
       body: JSON.stringify({
         identifier,
         password,
       }),
-      cache: "no-store",
+      cache: "no-store", // Antwort nicht zwischenspeichern.
     });
 
+    // Antwort von Strapi auslesen.
     const result = await response.json();
 
-    // FEHLER
+    // Login fehlgeschlagen: Fehler an das Formular weitergeben.
     if (!response.ok) {
       return NextResponse.json(
         { error: result.error?.message || "Login fehlgeschlagen" },
@@ -29,12 +34,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // ANTWORT ERSTELLEN
+    // Antwort mit den Benutzerdaten vorbereiten.
     const res = NextResponse.json({
       user: result.user,
     });
 
-    // ACCESS TOKEN ALS HTTP-ONLY COOKIE
+    // Access-Token als Cookie speichern, 10 Minuten gültig.
+    // httpOnly: Code im Browser kann das Cookie nicht auslesen.
     res.cookies.set("strapi_access", result.jwt, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -43,7 +49,7 @@ export async function POST(request: NextRequest) {
       maxAge: 600,
     });
 
-    // REFRESH COOKIE VON STRAPI WEITERGEBEN
+    // Refresh-Cookie von Strapi an den Browser weitergeben.
     const cookies = response.headers.getSetCookie();
 
     cookies.forEach((cookie) => {
@@ -52,6 +58,7 @@ export async function POST(request: NextRequest) {
 
     return res;
   } catch {
+    // Unerwarteter Fehler, z. B. wenn Strapi nicht erreichbar ist.
     return NextResponse.json(
       { error: "Serverfehler beim Login" },
       { status: 500 },

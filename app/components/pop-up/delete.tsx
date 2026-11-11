@@ -2,6 +2,8 @@
 import { X } from "lucide-react";
 // Importiert die Datenstruktur eines gespeicherten Kontakts.
 import type { Contact } from "@/lib/contact-zod-schema";
+// Sperrt das Scrollen der Seite im Hintergrund, solange das Pop-up offen ist.
+import { useLockScroll } from "../../hooks/auth/use-lock-scroll";
 // Legt fest, welche Informationen und Funktionen das Löschfenster benötigt.
 type DeletePopupProps = {
   contact: Contact;
@@ -16,6 +18,7 @@ export default function DeletePopup({
   onConfirm,
   onClose,
 }: DeletePopupProps) {
+  useLockScroll(); // Sperrt das Scrollen im Hintergrund.
   return (
     // Dunkler Hintergrund, der über die gesamte Website gelegt wird.
     <div className="PopUp_Container">

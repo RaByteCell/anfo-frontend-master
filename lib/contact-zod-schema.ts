@@ -21,5 +21,13 @@ export const contactSchema = z.object({
 });
 // Erstellt automatisch den passenden Datentyp anhand der festgelegten Eingaberegeln.
 export type ContactInput = z.infer<typeof contactSchema>;
-// Erweitert die Formulardaten um eine eindeutige ID und eine Dokument-ID für gespeicherte Kontakte.
-export type Contact = ContactInput & { id: number; documentId: string };
+// Erweitert die Formulardaten um eine eindeutige ID, eine Dokument-ID und die URL zum Profilbild für gespeicherte Kontakte.
+export type Contact = ContactInput & {
+  id: number;
+  documentId: string;
+  profilepicture?: {
+    url: string;
+    name: string;
+    formats?: { thumbnail?: { url: string } };
+  } | null;
+};

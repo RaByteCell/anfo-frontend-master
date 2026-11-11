@@ -12,6 +12,8 @@ import {
   type Contact,
   type ContactInput,
 } from "@/lib/contact-zod-schema";
+// Sperrt das Scrollen der Seite im Hintergrund, solange das Pop-up offen ist.
+import { useLockScroll } from "../../hooks/auth/use-lock-scroll";
 // Legt fest, welche Informationen und Funktionen das Bearbeitungsfenster benötigt.
 type EditPopupProps = {
   contact: Contact;
@@ -26,6 +28,7 @@ export default function EditPopup({
   onSave,
   onClose,
 }: EditPopupProps) {
+  useLockScroll(); // Sperrt das Scrollen im Hintergrund.
   // FORMULAR: Übernimmt die vorhandenen Kontaktdaten und überprüft Änderungen auf ihre Gültigkeit.
   const {
     register,
@@ -63,6 +66,7 @@ export default function EditPopup({
         </h2>
         {/* FORMULAR: Überprüft die Eingaben und übergibt die Änderungen zum Speichern. */}
         <form
+          noValidate
           onSubmit={handleSubmit(onSave)}
           className="grid grid-cols-1 gap-6 px-5"
         >

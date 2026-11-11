@@ -6,7 +6,6 @@ import { useState } from "react";
 export default function Providers({ children }: { children: React.ReactNode }) {
   // Erstellt einen zentralen Speicher, der geladene Daten zwischenspeichert und verwaltet.
   const [queryClient] = useState(() => new QueryClient());
-
   return (
     // Ermöglicht allen untergeordneten Komponenten den Zugriff auf React Query.
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>

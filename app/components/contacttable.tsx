@@ -1,9 +1,11 @@
-// Importiert die Symbole zum Bearbeiten und Löschen von Kontakten.
-import { Pencil, Trash2 } from "lucide-react";
+// Importiert die Symbole zum Bearbeiten, Löschen und Download von Kontakten.
+import { Pencil, Trash2, Download } from "lucide-react";
 // Importiert die Funktion zur einheitlichen Darstellung von Datumsangaben.
 import { formatDate } from "@/lib/format-date";
 // Importiert die Datenstruktur eines Kontakts.
 import type { Contact } from "@/lib/contact-zod-schema";
+// Importiert das Profilbildes (URL) zum jeweiligen Kontakt
+import { downloadPicture, getPictureUrl } from "@/lib/pictureurl";
 // Legt fest, welche Daten und Funktionen die Tabelle von außen erhält.
 type ContactTableProps = {
   contacts: Contact[];
@@ -13,6 +15,7 @@ type ContactTableProps = {
 };
 // Legt die Überschriften der einzelnen Tabellenspalten fest.
 const headings = [
+  "Profilbild",
   "Vorname",
   "Nachname",
   "Adresse",
@@ -44,6 +47,28 @@ export default function ContactTable({
       <tbody>
         {contacts.map((contact) => (
           <tr key={contact.id} className="hover:bg-gray-100">
+            <td className="contactview">
+              <div className="flex flex-col items-center gap-2">
+                {/* Das normale img statt des Next.js-Bildbausteins ist hier Absicht. Die nächste Zeile blendet die Warnung dazu aus. */}
+                {/* Profilbild des Kontakts, rund zugeschnitten. */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={getPictureUrl(contact)}
+                  alt={`Profilbild von ${contact.vorname} ${contact.nachname}`}
+                  className="h-16 w-16 rounded-full object-cover"
+                />
+                {contact.profilepicture && (
+                  <button
+                    type="button"
+                    onClick={() => downloadPicture(contact)}
+                    className="text-blue-400 hover:text-blue-800"
+                    title="Bild herunterladen"
+                  >
+                    <Download size={18} />
+                  </button>
+                )}
+              </div>
+            </td>
             <td className="contactview">{contact.vorname}</td>
             <td className="contactview">{contact.nachname}</td>
             <td className="contactview">{contact.adresse}</td>
@@ -79,7 +104,7 @@ export default function ContactTable({
         {/* LEERE TABELLE: Zeigt einen Hinweis an, wenn keine Kontakte vorhanden sind. */}
         {contacts.length === 0 && (
           <tr>
-            <td colSpan={7} className="border p-4 text-center">
+            <td colSpan={headings.length} className="border p-4 text-center">
               Keine Anmeldungen vorhanden.
             </td>
           </tr>

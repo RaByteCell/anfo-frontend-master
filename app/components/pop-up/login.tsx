@@ -6,7 +6,7 @@ import { z } from "zod";
 // Importiert das X-Symbol zum Schließen des Pop-ups.
 import { X } from "lucide-react";
 // Importiert die Funktion zur Anmeldung eines Benutzers.
-import { useLogin } from "../../hooks/auth/useLogin";
+import { useLogin } from "../../hooks/auth/use-login";
 // LOGIN-ÜBERPRÜFUNG: Legt fest, welche Angaben für die Anmeldung erforderlich sind.
 const loginSchema = z.object({
   identifier: z.string().trim().email("Ungültige E-Mail-Adresse"),

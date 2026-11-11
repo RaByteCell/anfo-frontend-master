@@ -3,10 +3,12 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+// Zum Auslesen der Fehlermeldung vom Server.
+import axios from "axios";
 // Importiert das X-Symbol zum Schließen des Pop-ups.
 import { X } from "lucide-react";
 // Importiert die Funktion zur Registrierung eines neuen Benutzers.
-import { useRegister } from "../../hooks/auth/useRegister";
+import { useRegister } from "../../hooks/auth/use-register";
 // Legt fest, welche Funktionen das Registrierungsfenster von außen erhält.
 type RegisterPopupProps = {
   onClose: () => void;
@@ -27,7 +29,11 @@ export default function RegisterPopup({
   onLogin,
 }: RegisterPopupProps) {
   // Stellt die Registrierungsfunktion bereit und erkennt laufende oder fehlgeschlagene Registrierungen.
-  const { mutate, isPending, isError } = useRegister();
+  const { mutate, isPending, isError, error } = useRegister();
+  // Prüft, ob die E-Mail oder der Name bereits vergeben ist.
+  const isAlreadyTaken =
+    axios.isAxiosError(error) &&
+    error.response?.data?.error?.includes("already taken");
   // FORMULAR: Verwaltet die Eingaben und überprüft sie anhand der festgelegten Regeln.
   const {
     register,
@@ -122,7 +128,9 @@ export default function RegisterPopup({
           {/* FEHLERMELDUNG: Wird angezeigt, wenn die Registrierung nicht erfolgreich war. */}
           {isError && (
             <p className="error">
-              Registrierung fehlgeschlagen. Bitte überprüfe deine Angaben.
+              {isAlreadyTaken
+                ? "E-Mail-Adresse oder Vor- und Nachnamen existiert bereits."
+                : "Registrierung fehlgeschlagen. Bitte überprüfe deine Angaben."}
             </p>
           )}
           {/* Startet die Registrierung und zeigt währenddessen einen Ladehinweis an. */}

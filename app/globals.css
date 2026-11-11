@@ -34,6 +34,10 @@ body {
 .Header {
   @apply flex h-16 items-center justify-between bg-gray-700 px-6;
 }
+/**/
+.logstatus {
+  @apply inline-flex items-center text-white hover:text-blue-400 transition-colors;
+}
 /* FORMULAR-CONTAINER: Sorgt für einen Abstand zum oberen Seitenbereich. */
 .containersec {
   margin-top: 5vh;
@@ -41,6 +45,10 @@ body {
 /* EINGABEFELDER: Einheitliches Design für die Formularfelder. */
 .inputfielsec {
   @apply border border-blue-400 rounded-md w-full text-center h-12 text-base;
+}
+/* KARTE: Einheitliche weiße Box für Formular und Tabelle. */
+.cardbox {
+  @apply bg-white p-6 shadow-xl ring ring-gray-900/5 min-h-155;
 }
 /* BUTTONS: Ändert den Mauszeiger beim Bewegen über einen Button. */
 .buttonsec:hover {
@@ -56,9 +64,13 @@ body {
   margin: 0;
   transform: translateX(-50%);
 }
+/*ÜBERSCHRIFTEN: Überschriften werden mittig und mit gleicher Schriftgröße, Farbe und Style angezeigt*/
+.headtitle {
+  @apply text-center text-3xl font-bold text-gray-800;
+}
 /* KONTAKTANSICHT: Gestaltung der einzelnen Tabellenfelder. */
 .contactview {
-  @apply border p-2 text-center;
+  @apply border-b border-gray-400 px-3 py-4 text-center align-middle;
 }
 /* DATUMSFELDER: Richtet die Datumsanzeige innerhalb des Eingabefeldes aus. */
 .date-input {
@@ -77,6 +89,26 @@ body {
 .date-input::-webkit-calendar-picker-indicator {
   position: absolute;
   right: 10px;
+}
+/* Blendet tt.mm.jjjj aus, solange das Datumsfeld leer und nicht angeklickt ist. */
+.date-input:invalid:not(:focus) {
+  color: transparent;
+}
+/* Eigener Platzhalter: liegt über dem Feld und lässt Klicks durch. */
+.date-placeholder {
+  display: none;
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 3rem;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  color: color-mix(in oklab, currentcolor 50%, transparent);
+}
+/* Zeigt den Platzhalter nur, wenn das Feld leer und nicht angeklickt ist. */
+.date-input:invalid:not(:focus) + .date-placeholder {
+  display: flex;
 }
 /* POP-UP-AKTIONEN: Richtet die Schaltflächen nebeneinander aus. */
 .PopUp_ActionButton {
