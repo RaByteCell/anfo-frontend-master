@@ -8,30 +8,30 @@ Die folgende Liste enthält alle direkten Frontend-Abhängigkeiten. Die aufgefü
 
 ### Zur Laufzeit verwendete Pakete
 
-| Paket | Installierte Version | Verwendung |
-| --- | --- | --- |
-| `@hookform/resolvers` | `5.9.1` | Verbindet React Hook Form mit Zod |
-| `@tanstack/react-query` | `5.104.1` | Laden und Zwischenspeichern von API-Daten |
-| `axios` | `1.20.0` | HTTP-Anfragen |
-| `lucide-react` | `1.65.0` | Symbole in der Benutzeroberfläche |
-| `next` | `16.4.4` | Web-Framework, Seiten und Serverrouten |
-| `react` | `19.3.0` | Benutzeroberfläche und Komponenten |
-| `react-dom` | `19.3.0` | Darstellung von React im Webbrowser |
-| `react-hook-form` | `7.89.0` | Verwaltung von Formularen |
-| `zod` | `4.6.5` | Prüfung und Beschreibung von Eingabedaten |
+| Paket                   | Installierte Version | Verwendung                                |
+| ----------------------- | -------------------- | ----------------------------------------- |
+| `@hookform/resolvers`   | `5.9.1`              | Verbindet React Hook Form mit Zod         |
+| `@tanstack/react-query` | `5.104.1`            | Laden und Zwischenspeichern von API-Daten |
+| `axios`                 | `1.20.0`             | HTTP-Anfragen                             |
+| `lucide-react`          | `1.65.0`             | Symbole in der Benutzeroberfläche         |
+| `next`                  | `16.4.4`             | Web-Framework, Seiten und Serverrouten    |
+| `react`                 | `19.3.0`             | Benutzeroberfläche und Komponenten        |
+| `react-dom`             | `19.3.0`             | Darstellung von React im Webbrowser       |
+| `react-hook-form`       | `7.89.0`             | Verwaltung von Formularen                 |
+| `zod`                   | `4.6.5`              | Prüfung und Beschreibung von Eingabedaten |
 
 ### Entwicklungs- und Build-Werkzeuge
 
-| Paket | Installierte Version | Verwendung |
-| --- | --- | --- |
-| `@tailwindcss/turbopack` | `4.3.3` | Tailwind-CSS-Integration mit Turbopack |
-| `@types/node` | `20.19.43` | TypeScript-Typdefinitionen für Node.js |
-| `@types/react` | `19.3.0` | TypeScript-Typdefinitionen für React |
-| `@types/react-dom` | `19.3.0` | TypeScript-Typdefinitionen für React DOM |
-| `eslint` | `8.57.1` | Codeanalyse und Stilprüfung |
-| `eslint-config-next` | `14.2.35` | ESLint-Regeln für Next.js |
-| `tailwindcss` | `4.3.3` | CSS-Framework für Gestaltung |
-| `typescript` | `5.9.3` | TypeScript-Compiler und Typprüfung |
+| Paket                    | Installierte Version | Verwendung                               |
+| ------------------------ | -------------------- | ---------------------------------------- |
+| `@tailwindcss/turbopack` | `4.3.3`              | Tailwind-CSS-Integration mit Turbopack   |
+| `@types/node`            | `20.19.43`           | TypeScript-Typdefinitionen für Node.js   |
+| `@types/react`           | `19.3.0`             | TypeScript-Typdefinitionen für React     |
+| `@types/react-dom`       | `19.3.0`             | TypeScript-Typdefinitionen für React DOM |
+| `eslint`                 | `8.57.1`             | Codeanalyse und Stilprüfung              |
+| `eslint-config-next`     | `14.2.35`            | ESLint-Regeln für Next.js                |
+| `tailwindcss`            | `4.3.3`              | CSS-Framework für Gestaltung             |
+| `typescript`             | `5.9.3`              | TypeScript-Compiler und Typprüfung       |
 
 Diese Angaben beschreiben direkte Abhängigkeiten des Frontends und stammen aus der vorhandenen Lockdatei. Das separate Strapi-Backend hat eine eigene `package.json` und eigene Paketversionen. Die Versionen der transitiven Pakete können bei Bedarf in `package-lock.json` nachgeschlagen werden.
 
@@ -190,103 +190,6 @@ Die Dateien in `app/api/auth/` sind Next.js-Serverrouten: `login` und `register`
 In `lib/contacts.ts` liegen die Kontakt-API-Aufrufe und React-Query-Hooks. `lib/contact-zod-schema.ts` definiert Kontaktfelder, Validierung und TypeScript-Typen. `lib/api.ts` enthält den Axios-Client, der bei einer nicht autorisierten Antwort eine Token-Erneuerung versucht.
 
 ### Wie die Dateien zusammenhängen
-
-Die folgenden Grafiken zeigen die wichtigsten Wege durch die Anwendung. Die Rahmen fassen Dateien nach ihren Ordnern zusammen; die Pfeile zeigen, welche Komponente eine andere verwendet oder wohin eine Anfrage gesendet wird.
-
-#### Kontakte
-
-```mermaid
-flowchart TD
-  subgraph page["app/"]
-    layout["layout.tsx"]
-    route["page.tsx"]
-    providers["providers.tsx"]
-    main["components/main.tsx"]
-    form["components/contactform.tsx"]
-    fields["components/formfields.tsx"]
-    table["components/contacttable.tsx"]
-    edit["components/pop-up/edit.tsx"]
-    all-contacts-in-table["components/pop-up/all-contacts.tsx"]
-    delete["components/pop-up/delete.tsx"]
-    layout --> route
-    layout --> providers
-    route --> main
-    main --> form
-    main --> table
-    main --> edit
-    main --> all
-    main --> delete
-    form --> fields
-    edit --> fields
-    all-contacts-in-table --> table
-  end
-
-  subgraph lib["lib/"]
-    schema["contact-zod-schema.ts"]
-    contacts["contacts.ts"]
-    date["format-date.ts"]
-    picture["pictureurl.ts"]
-  end
-
-  backend["Strapi-Backend<br/>/api/anfo-contacts"]
-  form --> schema
-  edit --> schema
-  form --> contacts
-  main --> contacts
-  table --> schema
-  table --> date
-  table --> picture
-  contacts -->|"GET, POST, PUT, DELETE"| backend
-```
-
-#### Login und Registrierung
-
-```mermaid
-flowchart TD
-  subgraph ui["app/components/"]
-    header["header.tsx"]
-    login["pop-up/login.tsx"]
-    register["pop-up/register.tsx"]
-    header --> login
-    header --> register
-  end
-
-  subgraph hooks["app/hooks/auth/"]
-    getUser["use-get-user.ts"]
-    useLogin["use-login.ts"]
-    useRegister["use-register.ts"]
-    useLogout["use-logout.ts"]
-    header --> getUser
-    header --> useLogout
-    login --> useLogin
-    register --> useRegister
-  end
-
-  subgraph routes["app/api/auth/"]
-    me["me/route.ts"]
-    loginRoute["login/route.ts"]
-    registerRoute["register/route.ts"]
-    refresh["refresh/route.ts"]
-    logoutRoute["logout/route.ts"]
-  end
-
-  subgraph lib["lib/"]
-    apiClient["api.ts"]
-  end
-
-  strapi["Strapi-Backend<br/>Benutzer und Authentifizierung"]
-  getUser --> apiClient
-  apiClient -->|"Benutzerstatus"| me
-  apiClient -->|"bei HTTP 401"| refresh
-  useLogin --> loginRoute
-  useRegister --> registerRoute
-  useLogout --> logoutRoute
-  me --> strapi
-  loginRoute --> strapi
-  registerRoute --> strapi
-  refresh --> strapi
-  logoutRoute --> strapi
-```
 
 Bei den Kontakten bedeutet der Pfeil zur Strapi-API: Die Frontend-Datei sendet eine Anfrage. Bei der Authentifizierung führen die Hooks zuerst zu Next.js-Serverrouten; diese sprechen dann mit Strapi. `api.ts` ist der Sonderfall für die Abfrage des Benutzerstatus: Bei einer HTTP-401-Antwort stößt der Axios-Client die Token-Erneuerung über `refresh/route.ts` an.
 
