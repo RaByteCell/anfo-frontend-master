@@ -53,7 +53,7 @@ export default function Main() {
   return (
     <main className="flex-1 px-4">
       {/* RAHMEN: untereinander auf kleinen, nebeneinander auf großen Bildschirmen */}
-      <div className="mx-auto mt-[5vh] flex w-full max-w-[90rem] flex-col items-center gap-8 xl:flex-row xl:items-start xl:justify-center">
+      <div className="mx-auto mt-[5vh] flex w-full max-w-360 flex-col items-center gap-8 xl:flex-row xl:items-start xl:justify-center">
         <ContactForm />
 
         {/* KONTAKTTABELLE: Zeigt die neuesten Einträge aus Strapi an. */}
