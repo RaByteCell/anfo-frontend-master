@@ -11,7 +11,7 @@ import { formatDate } from "@/lib/format-date";
 // Bauplan eines gespeicherten Kontakts.
 import type { Contact } from "@/lib/contact-zod-schema";
 // Sperrt das Scrollen der Seite im Hintergrund, solange das Pop-up offen ist.
-import { useLockScroll } from "../../hooks/auth/use-lock-scroll";
+import { useLockScroll } from "../../hooks/general/use-lock-scroll";
 // Legt fest, was das Pop-up von außen bekommen muss.
 type AllContactsPopupProps = {
   contacts: Contact[]; // Liste aller Kontakte

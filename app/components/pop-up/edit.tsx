@@ -13,7 +13,7 @@ import {
   type ContactInput,
 } from "@/lib/contact-zod-schema";
 // Sperrt das Scrollen der Seite im Hintergrund, solange das Pop-up offen ist.
-import { useLockScroll } from "../../hooks/auth/use-lock-scroll";
+import { useLockScroll } from "../../hooks/general/use-lock-scroll";
 // Legt fest, welche Informationen und Funktionen das Bearbeitungsfenster benötigt.
 type EditPopupProps = {
   contact: Contact;
