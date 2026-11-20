@@ -1,5 +1,5 @@
 // Adresse der API und Bauplan eines Kontakts aus den eigenen Dateien.
-import { API_URL } from "./contacts";
+import { API_URL } from "../app/hooks/general/use-contacts";
 import type { Contact } from "./contact-zod-schema";
 // Grundadresse von Strapi (Backend): entfernt das "/api" am Ende, weil Bilder nicht unter /api liegen.
 // "http://localhost:1337/api" → "http://localhost:1337"

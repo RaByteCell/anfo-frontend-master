@@ -1,6 +1,10 @@
 "use client";
 // Importiert die Funktionen zum Laden und Löschen von Kontakten.
-import { useContacts, useDeleteContact } from "@/lib/contacts";
+import {
+  useContacts,
+  useDeleteContact,
+  useOwnContacts,
+} from "@/app/hooks/general/use-contacts";
 // Importiert die Datenstruktur der Kontakte.
 import { type Contact } from "@/lib/contact-zod-schema";
 // Importiert die einzelnen Bestandteile der Kontaktverwaltung.
@@ -23,7 +27,18 @@ export default function Main() {
   // Prüft, ob jemand angemeldet ist.
   const { data: user } = useGetUser();
   // Lädt alle Kontakte und stellt die Funktion zum Löschen bereit.
-  const { data: contacts, isLoading, isError } = useContacts();
+  // Lädt die neuesten Kontakte samt Gesamtzahl.
+  const { data: result, isLoading, isError } = useContacts();
+  const contacts = result?.data;
+  const total = result?.meta.pagination.total ?? 0;
+  // Eigene Kontakte extra laden, damit sie auch erscheinen, wenn sie älter sind.
+  const { data: own } = useOwnContacts(user?.id);
+  const ownContacts = own?.data ?? [];
+  // STARTSEITE: zuerst die eigenen, dann mit den neuesten fremden auf 4 auffüllen.
+  const others = (contacts ?? []).filter(
+    (contact) => contact.ownerId !== user?.id,
+  );
+  const shownContacts = [...ownContacts, ...others].slice(0, 4);
   const { mutate: deleteContact, isPending: isDeleting } = useDeleteContact();
 
   // Speichert, welcher Kontakt gelöscht wird und ob alle Kontakte offen sind.
@@ -59,10 +74,8 @@ export default function Main() {
             {showContacts && (
               <ContactTable
                 // Erst eigene nach oben sortieren, dann die ersten vier nehmen.
-                contacts={splitOwnFirst(
-                  contacts ?? [],
-                  user?.id,
-                ).sortedContacts.slice(0, 4)}
+                // Zuerst eigene, dann die neuesten fremden.
+                contacts={shownContacts}
                 isDeleting={isDeleting}
                 onDelete={setDeleteContactData}
               />
@@ -76,17 +89,16 @@ export default function Main() {
                 onClick={() => setShowAll(true)}
                 className="text-blue-700 hover:underline"
               >
-                Alle Kontakte anzeigen ({contacts?.length ?? 0})
+                Alle Kontakte anzeigen ({total})
               </button>
             </div>
           )}
         </div>
       </div>
 
-      {/* ALLE KONTAKTE: Öffnet ein Fenster mit der vollständigen Kontaktliste. */}
-      {showAll && contacts && (
+      {/* ALLE KONTAKTE: Fenster mit Suche und Blättern, lädt seine Seiten selbst. */}
+      {showAll && (
         <AllContactsPopup
-          contacts={contacts}
           isDeleting={isDeleting}
           onDelete={setDeleteContactData}
           onClose={() => setShowAll(false)}

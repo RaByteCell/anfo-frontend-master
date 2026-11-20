@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 // Importiert die Funktion zum Speichern eines neuen Kontakts.
-import { useCreateContact } from "@/lib/contacts";
+import { useCreateContact } from "@/app/hooks/general/use-contacts";
 // Importiert die Regeln zur Überprüfung der Formulareingaben.
 import { contactSchema, type ContactInput } from "@/lib/contact-zod-schema";
 import FormFields from "./formfields";

@@ -46,14 +46,17 @@ export default function RegisterPopup({
   const onSubmit = (data: RegisterForm) => {
     mutate(
       {
-        // Fügt Vor- und Nachnamen zu einem gemeinsamen Benutzernamen zusammen.
-        username: `${data.vorname} ${data.nachname}`,
+        // Die E-Mail dient als Benutzername, weil sie einmalig ist.
+        // Vor- und Nachname dürfen doppelt vorkommen und haben eigene Felder.
         email: data.email,
         password: data.password,
+        vorname: data.vorname,
+        nachname: data.nachname,
       },
       {
+        // Man ist jetzt angemeldet: Fenster schließen.
         onSuccess: () => {
-          onLogin();
+          onClose();
         },
       },
     );
@@ -129,7 +132,7 @@ export default function RegisterPopup({
           {isError && (
             <p className="error">
               {isAlreadyTaken
-                ? "E-Mail-Adresse oder Vor- und Nachnamen existiert bereits."
+                ? "Diese E-Mail-Adresse ist bereits registriert."
                 : "Registrierung fehlgeschlagen. Bitte überprüfe deine Angaben."}
             </p>
           )}

@@ -11,7 +11,7 @@ import {
   type Contact,
   type ContactInput,
 } from "@/lib/contact-zod-schema";
-import { useUpdateContact } from "@/lib/contacts";
+import { useUpdateContact } from "@/app/hooks/general/use-contacts";
 import { formatDate } from "@/lib/format-date";
 import { canManage } from "@/lib/permissions";
 import { downloadPicture, getLargePictureUrl } from "@/lib/pictureurl";

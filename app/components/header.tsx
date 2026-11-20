@@ -12,6 +12,8 @@ import RegisterPopup from "./pop-up/register";
 // Eigene Funktionen: angemeldeten Benutzer holen und ausloggen.
 import { useGetUser } from "../hooks/auth/use-get-user";
 import { useLogout } from "../hooks/auth/use-logout";
+// Anzeigename des eingeloggten Users
+import { getDisplayName } from "@/lib/display-name";
 // Die Kopfzeile der Seite mit Logo, Login/Logout und Neu-laden-Knopf.
 export const Header = () => {
   // Merkt sich, ob das Login- oder Registrieren-Fenster offen ist (am Anfang geschlossen).
@@ -43,7 +45,7 @@ export const Header = () => {
               <>
                 <span className="flex items-center gap-2 text-white">
                   <User size={22} />
-                  {user.username}
+                  {getDisplayName(user)}
                 </span>
 
                 <button

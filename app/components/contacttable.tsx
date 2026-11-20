@@ -38,7 +38,13 @@ const headings = [
   "Geburtsdatum",
   "Verwalten",
 ];
-
+// Feste Breiten für Spalten mit gleich langem Inhalt. Die übrigen teilen sich den Rest.
+const columnWidths: Record<string, string> = {
+  Profilbild: "w-24",
+  PLZ: "w-20",
+  Geburtsdatum: "w-32",
+  Verwalten: "w-24",
+};
 // Hauptkomponente: Zeigt alle gespeicherten Kontakte in einer Tabelle an.
 export default function ContactTable({
   contacts,
@@ -62,9 +68,29 @@ export default function ContactTable({
   // EIGENE ZUERST: Eigene Kontakte alphabetisch oben, danach alle anderen.
   const { mine, sortedContacts } = splitOwnFirst(contacts, user?.id);
 
+  // TEXTZELLE: kürzt zu lange Werte mit "…" ab. Der ganze Wert erscheint beim Darüberfahren.
+  // Bei Gästen zeigt der Hinweis nur "Nur nach dem Login sichtbar", damit nichts verraten wird.
+  const cell = (value: string, isPrivate = false) => (
+    <td
+      className="contactview"
+      title={isPrivate && !loggedIn ? privateTitle : value}
+    >
+      <span className={`block truncate ${isPrivate ? privateClass : ""}`}>
+        {value}
+      </span>
+    </td>
+  );
+
   return (
     <>
-      <table className="w-full border-collapse text-left">
+      {/* table-fixed: Breiten richten sich nach der Box, nicht nach dem Inhalt. */}
+      <table className="w-full table-fixed border-collapse text-left">
+        {/* SPALTENBREITEN: feste Breite, wo eine angegeben ist, sonst gleich viel vom Rest. */}
+        <colgroup>
+          {visibleHeadings.map((heading) => (
+            <col key={heading} className={columnWidths[heading]} />
+          ))}
+        </colgroup>
         {/* TABELLENKOPF: Zeigt die Überschriften der einzelnen Spalten an. */}
         <thead>
           <tr className="bg-gray-700 text-center text-blue-50">
@@ -91,7 +117,14 @@ export default function ContactTable({
                   </td>
                 </tr>
               )}
-              <tr className="hover:bg-gray-100">
+              {/* Eigene Kontakte haben einen zarten blauen Hintergrund. */}
+              <tr
+                className={
+                  contact.ownerId === user?.id
+                    ? "bg-blue-50 hover:bg-blue-100"
+                    : "hover:bg-gray-100"
+                }
+              >
                 {/* PROFILBILD: Angemeldete öffnen per Klick das Profil, Gäste sehen nur das Bild. */}
                 <td className="contactview">
                   {loggedIn ? (
@@ -115,22 +148,13 @@ export default function ContactTable({
                     />
                   )}
                 </td>
-                <td className="contactview">{contact.vorname}</td>
-                <td className="contactview">{contact.nachname}</td>
-                <td className="contactview" title={privateTitle}>
-                  <span className={privateClass}>{contact.adresse}</span>
-                </td>
-                <td className="contactview" title={privateTitle}>
-                  <span className={privateClass}>{contact.plz}</span>
-                </td>
-                <td className="contactview" title={privateTitle}>
-                  <span className={privateClass}>{contact.email}</span>
-                </td>
-                <td className="contactview" title={privateTitle}>
-                  <span className={privateClass}>
-                    {formatDate(contact.bdate)}
-                  </span>
-                </td>
+                {/* DATEN: Adresse, PLZ, E-Mail und Geburtsdatum sind für Gäste verschwommen. */}
+                {cell(contact.vorname)}
+                {cell(contact.nachname)}
+                {cell(contact.adresse, true)}
+                {cell(contact.plz, true)}
+                {cell(contact.email, true)}
+                {cell(formatDate(contact.bdate), true)}
                 {/* VERWALTUNG: Knöpfe nur bei Kontakten, die man verwalten darf. */}
                 {loggedIn && (
                   <td className="contactview">
