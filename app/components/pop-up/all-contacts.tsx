@@ -45,6 +45,9 @@ const MONTHS = [
   "Dezember",
 ];
 
+// Buchstaben für die Leiste, wie das Register eines Telefonbuchs.
+const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
 // Beschreibt die gesetzten Filter in kurzen Worten, z. B. "Geboren März 1990".
 function describeFilters(filters: ContactFilters) {
   const parts: string[] = [];
@@ -60,6 +63,10 @@ function describeFilters(filters: ContactFilters) {
     } else {
       parts.push(`Geburtsjahr ${filters.year}`);
     }
+  }
+  if (filters.letter) {
+    const field = filters.letterField === "nachname" ? "Nachname" : "Vorname";
+    parts.push(`${field} beginnt mit ${filters.letter}`);
   }
   if (filters.plz) parts.push(`PLZ ${filters.plz}…`);
   if (filters.picture === "with") parts.push("mit Profilbild");
@@ -90,6 +97,8 @@ export default function AllContactsPopup({
   const pagination = data?.meta.pagination;
   const pageCount = pagination?.pageCount ?? 1;
   const activeFilters = countActiveFilters(filters);
+  // Gilt irgendein Filter, auch der Anfangsbuchstabe?
+  const anyFilter = activeFilters > 0 || Boolean(filters.letter);
   // Der Scrollbereich der Tabelle, damit beim Blättern wieder oben begonnen wird.
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -112,6 +121,21 @@ export default function AllContactsPopup({
     setShowFilter(false);
     goTo(1);
   };
+
+  // ANFANGSBUCHSTABE wählen. Ein zweiter Klick auf denselben Buchstaben hebt ihn wieder auf.
+  const chooseLetter = (letter: string) =>
+    applyFilters({
+      ...filters,
+      letter: filters.letter === letter ? "" : letter,
+    });
+
+  // Gemeinsames Aussehen der Buchstaben-Knöpfe: der aktive ist blau.
+  const letterClass = (active: boolean) =>
+    `buttonsec min-w-7 rounded px-1.5 py-1 text-sm ${
+      active
+        ? "bg-blue-400 font-semibold text-white"
+        : "text-gray-600 hover:bg-blue-50 hover:text-blue-600"
+    }`;
 
   return (
     // Abgedunkelter Hintergrund des Pop-ups.
@@ -163,8 +187,52 @@ export default function AllContactsPopup({
           </button>
         </div>
 
+        {/* BUCHSTABENLEISTE: wie das Register eines Telefonbuchs. */}
+        <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-2">
+          {/* Umschalter: Anfangsbuchstabe von Nachname oder Vorname */}
+          <div className="inline-flex overflow-hidden rounded-md border border-blue-400 text-sm">
+            {(["nachname", "vorname"] as const).map((field) => (
+              <button
+                key={field}
+                type="button"
+                aria-pressed={filters.letterField === field}
+                onClick={() => applyFilters({ ...filters, letterField: field })}
+                className={`buttonsec px-3 py-1 ${
+                  filters.letterField === field
+                    ? "bg-blue-400 text-white"
+                    : "text-blue-400 hover:bg-blue-50"
+                }`}
+              >
+                {field === "nachname" ? "Nachname" : "Vorname"}
+              </button>
+            ))}
+          </div>
+          {/* Buchstaben A–Z, davor "Alle" */}
+          <div className="flex flex-wrap gap-1">
+            <button
+              type="button"
+              aria-pressed={!filters.letter}
+              onClick={() => chooseLetter("")}
+              className={letterClass(!filters.letter)}
+            >
+              Alle
+            </button>
+            {LETTERS.map((letter) => (
+              <button
+                key={letter}
+                type="button"
+                aria-pressed={filters.letter === letter}
+                onClick={() => chooseLetter(letter)}
+                className={letterClass(filters.letter === letter)}
+              >
+                {letter}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* INFO: welche Filter gerade gelten, mit Zurücksetzen. */}
-        {activeFilters > 0 && (
+        {anyFilter && (
           <div className="mb-2 flex flex-wrap items-center gap-2 text-sm">
             <span className="text-gray-500">Filter aktiv:</span>
             {describeFilters(filters).map((text) => (

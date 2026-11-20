@@ -179,7 +179,14 @@ export default function FilterPopup({
         <div className="mt-8 grid grid-cols-2 gap-3">
           <button
             type="button"
-            onClick={() => setDraft(EMPTY_FILTERS)}
+            // Leert nur die Felder dieses Fensters, der Anfangsbuchstabe bleibt.
+            onClick={() =>
+              setDraft({
+                ...EMPTY_FILTERS,
+                letter: draft.letter,
+                letterField: draft.letterField,
+              })
+            }
             className="buttonsec rounded-md border border-blue-400 p-3 text-blue-400 hover:bg-blue-50"
           >
             Zurücksetzen

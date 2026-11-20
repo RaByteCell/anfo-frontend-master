@@ -82,6 +82,8 @@ export type ContactFilters = {
   day: string; // Geburtstag 1–31, nur zusammen mit Jahr und Monat
   plz: string; // PLZ beginnt mit diesem Text
   picture: "all" | "with" | "without"; // Profilbild egal / vorhanden / nicht vorhanden
+  letter: string; // Anfangsbuchstabe A–Z, leer = alle (Buchstabenleiste)
+  letterField: "nachname" | "vorname"; // worauf sich der Anfangsbuchstabe bezieht
 };
 // Keine Filter gesetzt.
 export const EMPTY_FILTERS: ContactFilters = {
@@ -90,9 +92,12 @@ export const EMPTY_FILTERS: ContactFilters = {
   day: "",
   plz: "",
   picture: "all",
+  letter: "",
+  letterField: "nachname",
 };
 
-// Zählt, wie viele Filter gesetzt sind (Geburtsdatum zählt als einer).
+// Zählt, wie viele Filter im Filter-Fenster gesetzt sind (Geburtsdatum zählt als einer).
+// Der Anfangsbuchstabe zählt nicht mit, er hat seine eigene Leiste.
 export function countActiveFilters(filters: ContactFilters) {
   return [filters.year, filters.plz, filters.picture !== "all"].filter(Boolean)
     .length;
@@ -116,6 +121,9 @@ export function birthDateRange(filters: ContactFilters) {
   const lastDay = new Date(year, month, 0).getDate();
   return [`${year}-${pad(month)}-01`, `${year}-${pad(month)}-${pad(lastDay)}`];
 }
+
+// Buchstaben, deren Umlaut im Telefonbuch dazugehört.
+const UMLAUTS: Record<string, string> = { A: "Ä", O: "Ö", U: "Ü" };
 
 // Gemeinsamer Typ für die Einstellungen, die an Strapi gehen.
 type Params = Record<string, string | number | boolean>;
@@ -147,6 +155,15 @@ function filterParams(filters: ContactFilters) {
   }
   if (filters.picture === "without") {
     params["filters[$and][4][profilepicture][id][$null]"] = true;
+  }
+  // ANFANGSBUCHSTABE: wie im Telefonbuch, bei A auch Ä, bei O auch Ö, bei U auch Ü.
+  if (filters.letter) {
+    const variants = [filters.letter, UMLAUTS[filters.letter]].filter(Boolean);
+    variants.forEach((variant, i) => {
+      params[
+        `filters[$and][5][$or][${i}][${filters.letterField}][$startsWithi]`
+      ] = variant;
+    });
   }
   return params;
 }
