@@ -1,6 +1,6 @@
 // Dieser Code läuft im Browser, weil er auf Klicks reagiert.
 "use client";
-// Damit kann sich die Seite Zustände merken, z. B. ob etwas geöffnet ist.
+// Damit kann sich die Seite Zustände merken, z. B. den Suchbegriff.
 import { useState } from "react";
 // X-Symbol zum Schließen des Pop-ups.
 import { X } from "lucide-react";
@@ -16,21 +16,19 @@ import { useLockScroll } from "../../hooks/general/use-lock-scroll";
 type AllContactsPopupProps = {
   contacts: Contact[]; // Liste aller Kontakte
   isDeleting: boolean; // Wird gerade ein Kontakt gelöscht?
-  onEdit: (contact: Contact) => void; // Wird beim Bearbeiten eines Kontakts ausgeführt.
   onDelete: (contact: Contact) => void; // Wird beim Löschen eines Kontakts ausgeführt.
   onClose: () => void; // Wird beim Schließen des Pop-ups ausgeführt.
 };
-// Pop-up, das alle Kontakte anzeigt.
+// Pop-up, das alle Kontakte anzeigt. Bearbeiten öffnet die Tabelle selbst im Profil.
 export default function AllContactsPopup({
   contacts,
   isDeleting,
-  onEdit,
   onDelete,
   onClose,
 }: AllContactsPopupProps) {
   useLockScroll(); // Sperrt das Scrollen im Hintergrund.
   const [search, setSearch] = useState(""); // Merkt sich den Suchbegriff (am Anfang leer).
-  // Suchtext aufbereiten und alle Kontakte filtern
+  // Suchtext aufbereiten und alle Kontakte filtern.
   const query = search.trim().toLowerCase();
   const filtered = contacts.filter((contact) =>
     [
@@ -79,7 +77,6 @@ export default function AllContactsPopup({
           <ContactTable
             contacts={filtered}
             isDeleting={isDeleting}
-            onEdit={onEdit}
             onDelete={onDelete}
           />
         </div>

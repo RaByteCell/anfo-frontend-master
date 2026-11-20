@@ -4,7 +4,7 @@ const STRAPI_URL = process.env.STRAPI_URL || "http://localhost:1337";
 // Antwort, die im Frontend die Token-Erneuerung auslöst.
 const needsRefresh = () =>
   NextResponse.json({ error: "Token abgelaufen" }, { status: 401 });
-// Gibt den angemeldeten Benutzer zurück.
+// Gibt den angemeldeten Benutzer samt Rolle zurück.
 export async function GET() {
   const cookieStore = await cookies();
   const token = cookieStore.get("strapi_access")?.value;
@@ -28,6 +28,18 @@ export async function GET() {
       return NextResponse.json({ user: null });
     }
     const user = await response.json();
+
+    // Rolle über die eigene Strapi-Adresse holen, weil /users/me sie nicht mitschickt.
+    const roleResponse = await fetch(`${STRAPI_URL}/api/account/role`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      cache: "no-store",
+    });
+    if (roleResponse.ok) {
+      user.role = await roleResponse.json();
+    }
+
     return NextResponse.json({ user });
   } catch {
     return NextResponse.json({ user: null });

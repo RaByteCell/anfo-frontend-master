@@ -7,6 +7,7 @@ export interface AuthUser {
   id: number;
   username: string;
   email: string;
+  role?: { type: string; name: string }; // z. B. "authenticated" oder "admin"
 }
 // Holt den angemeldeten Benutzer vom Server.
 const getUser = async (): Promise<AuthUser | null> => {

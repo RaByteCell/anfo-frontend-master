@@ -27,3 +27,6 @@ export async function downloadPicture(contact: Contact) {
   link.click();
   URL.revokeObjectURL(link.href);
 }
+// Für große Anzeigen wie das Profil: Original statt der kleinen Vorschau.
+export const getLargePictureUrl = (contact: Contact) =>
+  contact.profilepicture ? toFullUrl(contact.profilepicture.url) : PLACEHOLDER;

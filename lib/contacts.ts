@@ -1,5 +1,7 @@
 // Importiert Axios für die Kommunikation mit der Strapi-Schnittstelle (API).
 import axios from "axios";
+// Wie axios, erneuert aber abgelaufene Tokens automatisch.
+import { api as authApi } from "./api";
 // Importiert React Query für das Laden, Speichern und Aktualisieren von Daten.
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 // Importiert die Datentypen für neue und bereits gespeicherte Kontakte.
@@ -35,19 +37,42 @@ function useContactMutation<V>(action: (vars: V) => Promise<unknown>) {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: KEY }),
   });
 }
-// KONTAKT ERSTELLEN: Übermittelt einen neuen Kontakt an Strapi und speichert ihn dort.
+// KONTAKT ERSTELLEN: Über die eigene Route, damit das Login-Token mitgeht.
 export const useCreateContact = () =>
   useContactMutation((data: ContactInput) =>
-    api.post("/anfo-contacts", { data }),
+    authApi.post("/api/contacts", { data }),
   );
-// KONTAKT BEARBEITEN: Aktualisiert einen bestehenden Kontakt anhand seiner Dokument-ID.
+// BILD HOCHLADEN: Schickt die Datei an Strapi und gibt ihre ID zurück.
+async function uploadPicture(file: File) {
+  const formData = new FormData();
+  formData.append("files", file); // Strapi erwartet die Datei unter dem Namen "files".
+  const { data } = await authApi.post<{ id: number }[]>(
+    "/api/upload",
+    formData,
+  );
+  return data[0].id;
+}
+
+// KONTAKT BEARBEITEN: Lädt zuerst ein neues Bild hoch (falls gewählt), dann die Daten.
 export const useUpdateContact = () =>
   useContactMutation(
-    ({ documentId, data }: { documentId: string; data: ContactInput }) =>
-      api.put(`/anfo-contacts/${documentId}`, { data }),
+    async ({
+      documentId,
+      data,
+      picture,
+    }: {
+      documentId: string;
+      data: ContactInput;
+      picture?: File | null;
+    }) => {
+      const profilepicture = picture ? await uploadPicture(picture) : undefined;
+      return authApi.put(`/api/contacts/${documentId}`, {
+        data: profilepicture ? { ...data, profilepicture } : data,
+      });
+    },
   );
-// KONTAKT LÖSCHEN: Entfernt einen bestehenden Kontakt anhand seiner Dokument-ID aus Strapi.
+// KONTAKT LÖSCHEN: Über die eigene Route, damit das Login-Token mitgeht.
 export const useDeleteContact = () =>
   useContactMutation((documentId: string) =>
-    api.delete(`/anfo-contacts/${documentId}`),
+    authApi.delete(`/api/contacts/${documentId}`),
   );

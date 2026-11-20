@@ -1,30 +1,32 @@
 "use client";
-// Importiert die Funktionen zum Laden, Bearbeiten und Löschen von Kontakten.
-import {
-  useContacts,
-  useUpdateContact,
-  useDeleteContact,
-} from "@/lib/contacts";
+// Importiert die Funktionen zum Laden und Löschen von Kontakten.
+import { useContacts, useDeleteContact } from "@/lib/contacts";
 // Importiert die Datenstruktur der Kontakte.
-import { type Contact, type ContactInput } from "@/lib/contact-zod-schema";
+import { type Contact } from "@/lib/contact-zod-schema";
 // Importiert die einzelnen Bestandteile der Kontaktverwaltung.
 import ContactTable from "./contacttable";
 import DeletePopup from "./pop-up/delete";
 import ContactForm from "./contactform";
-import EditPopup from "./pop-up/edit";
 import AllContactsPopup from "./pop-up/all-contacts";
 // Importiert die Funktion zum Merken von Zuständen.
 import { useState } from "react";
+// Prüft, ob jemand angemeldet ist.
+import { useGetUser } from "../hooks/auth/use-get-user";
+// Sortiert eigene Kontakte nach oben.
+import { splitOwnFirst } from "@/lib/sort-contacts";
+// Hinweis für Gäste, wird anstelle des Formulars angezeigt.
+import GuestHint from "./guest-hint";
 
-// Hauptkomponente: Zeigt das Anmeldeformular und verwaltet alle gespeicherten Kontakte.
+// Hauptbereich: Zeigt das Formular und verwaltet alle gespeicherten Kontakte.
+// Bearbeiten passiert im Profil-Pop-up, das die Tabelle selbst öffnet.
 export default function Main() {
-  // Lädt alle Kontakte und stellt die Funktionen zum Bearbeiten und Löschen bereit.
+  // Prüft, ob jemand angemeldet ist.
+  const { data: user } = useGetUser();
+  // Lädt alle Kontakte und stellt die Funktion zum Löschen bereit.
   const { data: contacts, isLoading, isError } = useContacts();
   const { mutate: deleteContact, isPending: isDeleting } = useDeleteContact();
-  const { mutate: updateContact, isPending: isUpdating } = useUpdateContact();
 
-  // Speichert, welcher Kontakt bearbeitet oder gelöscht wird und ob alle Kontakte offen sind.
-  const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+  // Speichert, welcher Kontakt gelöscht wird und ob alle Kontakte offen sind.
   const [deleteContactData, setDeleteContactData] = useState<Contact | null>(
     null,
   );
@@ -32,15 +34,6 @@ export default function Main() {
 
   // Kontakte nur anzeigen, wenn sie fertig geladen sind.
   const showContacts = !isLoading && !isError;
-
-  // BEARBEITEN: Speichert die Änderungen des ausgewählten Kontakts.
-  const onUpdate = (data: ContactInput) => {
-    if (!selectedContact) return;
-    updateContact(
-      { documentId: selectedContact.documentId, data },
-      { onSuccess: () => setSelectedContact(null) },
-    );
-  };
 
   // LÖSCHEN: Entfernt den ausgewählten Kontakt nach der Bestätigung.
   const onDelete = () => {
@@ -54,27 +47,34 @@ export default function Main() {
     <main className="flex-1 px-4">
       {/* RAHMEN: untereinander auf kleinen, nebeneinander auf großen Bildschirmen */}
       <div className="mx-auto mt-[5vh] flex w-full max-w-360 flex-col items-center gap-8 xl:flex-row xl:items-start xl:justify-center">
-        <ContactForm />
+        {/* Angemeldet: Formular. Gast: Hinweis mit Login und Registrieren. */}
+        {user ? <ContactForm /> : <GuestHint />}
 
-        {/* KONTAKTTABELLE: Zeigt die neuesten Einträge aus Strapi an. */}
+        {/* KONTAKTTABELLE: Zeigt die Einträge aus Strapi an. */}
         <div className="w-full min-w-0 xl:flex-1">
           <div className="cardbox overflow-x-auto">
-            <h1 className="headtitle pb-7">Neueste Kontakte</h1>
+            <h1 className="headtitle pb-7">
+              {user ? "Deine Kontakte" : "Neueste Kontakte"}
+            </h1>
             {showContacts && (
               <ContactTable
-                contacts={(contacts ?? []).slice(0, 4)}
+                // Erst eigene nach oben sortieren, dann die ersten vier nehmen.
+                contacts={splitOwnFirst(
+                  contacts ?? [],
+                  user?.id,
+                ).sortedContacts.slice(0, 4)}
                 isDeleting={isDeleting}
-                onEdit={setSelectedContact}
                 onDelete={setDeleteContactData}
               />
             )}
           </div>
-          {showContacts && (
+          {/* Nur angemeldete Benutzer können alle Kontakte öffnen. */}
+          {showContacts && user && (
             <div className="mt-3 text-right">
               <button
                 type="button"
                 onClick={() => setShowAll(true)}
-                className="text-blue-400 hover:underline"
+                className="text-blue-700 hover:underline"
               >
                 Alle Kontakte anzeigen ({contacts?.length ?? 0})
               </button>
@@ -88,19 +88,8 @@ export default function Main() {
         <AllContactsPopup
           contacts={contacts}
           isDeleting={isDeleting}
-          onEdit={setSelectedContact}
           onDelete={setDeleteContactData}
           onClose={() => setShowAll(false)}
-        />
-      )}
-
-      {/* BEARBEITUNGSFENSTER: Öffnet ein Fenster zum Ändern des ausgewählten Kontakts. */}
-      {selectedContact && (
-        <EditPopup
-          contact={selectedContact}
-          isUpdating={isUpdating}
-          onSave={onUpdate}
-          onClose={() => setSelectedContact(null)}
         />
       )}
 

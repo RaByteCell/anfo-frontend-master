@@ -25,6 +25,7 @@ export type ContactInput = z.infer<typeof contactSchema>;
 export type Contact = ContactInput & {
   id: number;
   documentId: string;
+  ownerId?: number | null; // Benutzer-ID der Person, die den Kontakt angelegt hat.
   profilepicture?: {
     url: string;
     name: string;
